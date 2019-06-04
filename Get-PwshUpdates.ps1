@@ -37,8 +37,12 @@ Function Get-PwshUpdates {
         [Parameter()]
         [Switch]$Preview
     )
+    Function Show-Alert {
+        $Alert = New-Object -comobject wscript.shell
+        $Alert.popup("A new version of $($PwshCurrent.DisplayName) is available!! Update now?", 0, "PowershellCore Update", 32 + 4)
+    }
 
-    $PwshName = "PowerShell 6-x"
+    $PwshName = "PowerShell [0-9]-x"
 
     #Get the newest PWSHversion from the Powershell Github Metadata.
     $Metadata = Invoke-RestMethod https://raw.githubusercontent.com/PowerShell/PowerShell/master/tools/metadata.json
@@ -46,18 +50,18 @@ Function Get-PwshUpdates {
     # Change the tags so they are in the same format as the local version
     $PwshRelease = $Metadata.ReleaseTag -replace '^v'
     if ($Preview) {
-        $PwshRelease = ($Metadata.PreviewReleaseTag -replace '^v') -replace '-rc'
+        $PwshRelease = ($Metadata.PreviewReleaseTag -replace '^v') -replace '-preview'
         $PwshName = $PwshName -replace '-x', '-preview'
     }
 
     # Get the local version
-    $PwshCurrent = Get-ItemProperty HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\* | Where-Object { $_.DisplayName -match "$PwshName" } | Select-Object DisplayName, DisplayVersion, UnInstallString
+    $PwshCurrent = Get-ItemProperty HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\* | Where-Object { $_.DisplayName -match "$PwshName" } | Select-Object DisplayName, DisplayVersion
     $Alert = New-Object -comobject wscript.shell
     #Compare and take action
     if ($PwshCurrent) {
         #Create a popup if the current version and the newest version are not the same
         if ($PwshCurrent.DisplayVersion -notlike "$PwshRelease*") {
-            $InstallUpdate = $Alert.popup("A new version of $($PwshCurrent.DisplayName) is available!! Update now?", 0, "PowershellCore Update", 32 + 4)
+            $InstallUpdate = Show-Alert
         }
         else {
             Write-Output "$($PwshCurrent.DisplayName) : No Update needed"
