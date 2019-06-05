@@ -1,24 +1,24 @@
 # PWSHUpdateCheck
 
-This Script Checks new PowerShell Core versions and installs them as needed
+This Script Checks new PowerShell Core versions and installs them as needed on Windows devices
 
 <https://4bes.nl/2019/01/04/powershell-challenge-check-pwsh-version-and-install/> describes how the script was created and how to use it in a Scheduled task.
 
 ## Common setup
 
-### prerequisites
-
-- Only tested in Windows PowerShell
-- PowerShell Core (Preview) should be installed already
-
 ### Installation
 
-Run in a scheduled task or manually
+Run in a scheduled task or manually.
 
 ## To Contribute
 
 Any ideas or contributions are welcome!
 Please add an issue with your suggestions.
+
+## Changelog
+
+Version: 1.0
+Last update: 5/6/2019
 
 ## Known Issues
 
