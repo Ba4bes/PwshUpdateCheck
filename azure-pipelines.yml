@@ -39,7 +39,7 @@ stages:
       inputs:
         targetType: filePath
         filePath: Tests/PSScriptAnalyzer.ps1
-        arguments: '-ScriptPath "/"'
+        arguments: '-ScriptPath "/Get-PwshUpdate.ps1"'
         failOnStderr: true
 
 - stage: Deploy
