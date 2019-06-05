@@ -134,7 +134,11 @@ Function Get-PwshUpdate {
     }
 }
 
+if ($MyInvocation.InvocationName -ne '.'){
 Get-PwshUpdate
+
 Get-PwshUpdate -Preview
+Show-Alert -AlertText "Test"
+}
 
 

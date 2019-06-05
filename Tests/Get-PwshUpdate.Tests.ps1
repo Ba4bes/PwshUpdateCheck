@@ -2,9 +2,8 @@
 $here = (Split-Path -Parent $MyInvocation.MyCommand.Path) -replace "\\Tests"
 $sut = (Split-Path -Leaf $MyInvocation.MyCommand.Path) -replace '\.Tests\.', '.'
 
-Set-Alias -Name Get-PwshUpdate -Value Out-Null
 . "$here\$sut"
-Remove-Item Alias:Get-PwshUpdate
+
 
 Describe "Get-PwshUpdate" {
     Context "Regular tests" {

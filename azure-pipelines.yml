@@ -23,8 +23,8 @@ stages:
     - powershell: |
         $outputFile = ".\TEST-RESULTS.xml"
 
-        Invoke-Pester -OutputFile $outputFile -OutputFormat NUnitXml
-      failOnStderr: true
+        Invoke-Pester -OutputFile $outputFile -OutputFormat NUnitXml -enableExit
+      failOnStderr: false
       displayName: 'Invoke-Pester'
     - task: PublishTestResults@2
       displayName: Publish Test Results
