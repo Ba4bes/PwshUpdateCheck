@@ -4,7 +4,7 @@ $sut = (Split-Path -Leaf $MyInvocation.MyCommand.Path) -replace '\.Tests\.', '.'
 
 Set-Alias -Name Get-PwshUpdate -Value Out-Null
 . "$here\$sut"
-Remove-Alias Get-PwshUpdate
+Remove-Item Alias:Get-PwshUpdate
 
 Describe "Get-PwshUpdate" {
     Context "Regular tests" {
@@ -110,7 +110,6 @@ Describe "Get-PwshUpdate" {
         }
         It "throws when used with Core Previeuw and installing Core Preview" {
             Mock PSVersion { "6.2.0-rc.1" }
-            # $Result = Get-PwshUpdate -Preview
             { Get-PwshUpdate -Preview } | should -throw  "The shell is running in PowerShell Core Preview while trying to install Preview. Please run script in PowerShell Core or Windows PowerShell."
         }
     }
