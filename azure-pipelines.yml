@@ -1,44 +1,54 @@
-# Starter pipeline
-# Start with a minimal pipeline that you can customize to build and deploy your code.
-# Add steps that build, run tests, deploy, and more:
-# https://aka.ms/yaml
 
-pr:
-- master
+name: Gallerydeployment
 
-pool:
-  vmImage: vs2017-win2016
+trigger:
+  branches:
+    include:
+    - '*'  # must quote since "*" is a YAML reserved character; we want a string
 
-steps:
-- powershell: |
-   Install-PackageProvider -Name NuGet -Force -Scope CurrentUser
-   Install-Module -Name Pester -Force -Scope CurrentUser -SkipPublisherCheck
-   Install-Module -Name PSScriptAnalyzer -Force -Scope CurrentUser
-  displayName: 'Install Pester and import module'
 
-- powershell: |
-   $Results = Invoke-Pester -PassThru
+stages:
 
-   if ($Results.FailedCount -ne "0"){
-        throw "a PesterTest has failed"
-   }
-   if ($Results.PassedCount -eq "0"){
-        throw "There was no passed PesterTest"
-   }
-  failOnStderr: true
-  displayName: 'Invoke-Pester'
-
-- task: PowerShell@2
-  displayName: 'PSScriptanalyzer-tests'
-  inputs:
-    targetType: filePath
-    filePath: Tests/PSScriptAnalyzer.ps1
-    arguments: '-ScriptPath "$(Build.SourcesDirectory)\ARMHelper\"'
-    failOnStderr: true
-
-- task: PublishBuildArtifacts@1
-  displayName: 'Publish Artifact: drop'
-  inputs:
-    PathtoPublish: ARMHelper
-
+- stage: Build
+  jobs:
+  - job: Tests
+    pool:
+      vmImage: windows-2019
+    steps:
+    - powershell: |
+       Install-PackageProvider -Name NuGet -Force -Scope CurrentUser
+       Install-Module -Name Pester -Force -Scope CurrentUser -SkipPublisherCheck
+       Install-Module -Name PSScriptAnalyzer -Force -Scope CurrentUser
+      displayName: 'Install Pester and import module'
+    - powershell: |
+       $Results = Invoke-Pester -PassThru
     
+       if ($Results.FailedCount -ne "0"){
+            throw "a PesterTest has failed"
+       }
+       if ($Results.PassedCount -eq "0"){
+            throw "There was no passed PesterTest"
+       }
+      failOnStderr: true
+      displayName: 'Invoke-Pester'
+    - task: PowerShell@2
+      displayName: 'PSScriptanalyzer-tests'
+      inputs:
+        targetType: filePath
+        filePath: Tests/PSScriptAnalyzer.ps1
+        arguments: '-ScriptPath "/"'
+        failOnStderr: true
+
+- stage: Deploy
+  condition:
+    and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master') )
+  jobs:
+  - job: Deploy
+    dependsOn:
+      Build
+    pool:
+      vmImage: windows-2019
+    steps:
+    - powershell: |
+        'Publish-Module -Path "$(System.DefaultWorkingDirectory)/_Ba4bes_ARMhelper/ARMHelper" -NuGetApiKey "$(GalleryApiKey)"    '
+      displayName: 'Deploy to Gallery'
