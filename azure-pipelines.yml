@@ -21,16 +21,19 @@ stages:
        Install-Module -Name PSScriptAnalyzer -Force -Scope CurrentUser
       displayName: 'Install Pester and import module'
     - powershell: |
-       $Results = Invoke-Pester -PassThru
-    
-       if ($Results.FailedCount -ne "0"){
-            throw "a PesterTest has failed"
-       }
-       if ($Results.PassedCount -eq "0"){
-            throw "There was no passed PesterTest"
-       }
+        $outputFile = ".\TEST-RESULTS.xml"
+
+        Invoke-Pester -OutputFile $outputFile -OutputFormat NUnitXml
       failOnStderr: true
       displayName: 'Invoke-Pester'
+    - task: PublishTestResults@2
+      displayName: Publish Test Results
+      inputs:
+        testRunTitle: 'Test Results for Pester'
+        buildPlatform: 'Windows'
+        testRunner: 'NUnit'
+        testResultsFiles: './TEST-RESULTS.xml'
+        failTaskOnFailedTests: true # required to fail build when tests fail
     - task: PowerShell@2
       displayName: 'PSScriptanalyzer-tests'
       inputs:
