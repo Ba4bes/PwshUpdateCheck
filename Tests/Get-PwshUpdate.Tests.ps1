@@ -59,6 +59,12 @@ Describe "Get-PwshUpdate" {
             Mock PSVersion { "6.2.0" }
             { Get-PwshUpdate } | should -throw "The shell is running in PowerShell Core while trying to install Core. Please run script in PowerShell Core Preview or Windows PowerShell."
         }
+        It "The Mocks are called" {
+            Assert-MockCalled Get-ItemProperty 
+            Assert-MockCalled PSVersion
+            Assert-MockCalled Invoke-Expression 
+            Assert-MockCalled Show-Alert
+        }
     }
     Context "Preview tests" {
         Mock Invoke-RestMethod {
