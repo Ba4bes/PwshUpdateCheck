@@ -42,12 +42,19 @@ Describe "Get-PwshUpdate" {
             $Result = Get-PwshUpdate
             $Result | should be "Update canceled by user."
         }
+        
         It "Starts installation when asked" {
             Mock Show-Alert { 6 }
             Mock Invoke-Expression { Return "Invoke has started" }
             $Result = Get-PwshUpdate
             $Result | should be "Invoke has started"
         }
+        # It "throws when installation gives an error" {
+        #     Mock Show-Alert { 6 }
+        #     Mock Invoke-Expression { Write-Error "I broke" }
+        #     #$Result = Get-PwshUpdate
+        #     { Get-PwshUpdate } | should -Throw "Installation failed"
+        # }
         It "Start installation when no earlier version is available" {
             Mock Get-ItemProperty { $null }
             Mock Show-Alert { 6 }
