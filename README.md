@@ -9,6 +9,33 @@ This Script Checks new PowerShell Core versions and installs them as needed on W
 ### Installation
 
 Run in a scheduled task or manually.
+Want to Run it in a scheduled task? Execute the following code:
+```PowerShell
+# Run as administrator!
+# Run in Windows PowerShell, this does not work in Core 😭
+
+$ScriptPath = "C:\Scripts\Get-PwshUpdate.ps1"
+#Format as Date-Time
+[DateTime]$CheckTime = "10pm"
+
+$Parameters = @{
+"Execute" = "Powershell.exe"
+"Argument" = "-ExecutionPolicy Bypass -NoProfile -WindowStyle Hidden -file $ScriptPath"
+}
+$Action = New-ScheduledTaskAction @Parameters
+
+$Trigger =  New-ScheduledTaskTrigger -Daily -At $CheckTime
+
+$Parameters = @{
+    "Action" =  $Action
+    "Trigger"= $Trigger
+    "TaskName" = "PWSH Update check"
+    "RunLevel" =  "Highest"
+    "Description" = "Daily check for PWSH updates"
+}
+
+Register-ScheduledTask @Parameters
+```
 
 ## To Contribute
 
@@ -18,7 +45,7 @@ Please add an issue with your suggestions.
 ## Changelog
 
 Version: 1.0
-Last update: 5/6/2019
+Last update: june 13th 2019
 
 ## Known Issues
 
