@@ -19,6 +19,9 @@ Describe "Get-PwshUpdate" {
         Mock PSVersion {
             "5.1"
         }
+        It "Script does not throw" {
+            { Get-PwshUpdate } | should -not -Throw
+        }
         It "Stops script without action when no new version is available" {
             Mock Get-ItemProperty {
                 [pscustomobject]@{
@@ -42,19 +45,13 @@ Describe "Get-PwshUpdate" {
             $Result = Get-PwshUpdate
             $Result | should be "Update canceled by user."
         }
-        
+
         It "Starts installation when asked" {
             Mock Show-Alert { 6 }
             Mock Invoke-Expression { Return "Invoke has started" }
             $Result = Get-PwshUpdate
             $Result | should be "Invoke has started"
         }
-        # It "throws when installation gives an error" {
-        #     Mock Show-Alert { 6 }
-        #     Mock Invoke-Expression { Write-Error "I broke" }
-        #     #$Result = Get-PwshUpdate
-        #     { Get-PwshUpdate } | should -Throw "Installation failed"
-        # }
         It "Start installation when no earlier version is available" {
             Mock Get-ItemProperty { $null }
             Mock Show-Alert { 6 }
@@ -62,14 +59,20 @@ Describe "Get-PwshUpdate" {
             $Result = Get-PwshUpdate
             $Result | should be "Invoke has started"
         }
+        It "throws when installation gives an error" {
+            Mock Show-Alert { 6 }
+            Mock Invoke-RestMethod  { Throw "Installation failed" }
+            #$Result = Get-PwshUpdate
+            { Get-PwshUpdate } | should Throw "Installation failed"
+        }
         It "throws when used with Core and installing Core" {
             Mock PSVersion { "6.2.0" }
             { Get-PwshUpdate } | should -throw "The shell is running in PowerShell Core while trying to install Core. Please run script in PowerShell Core Preview or Windows PowerShell."
         }
         It "The Mocks are called" {
-            Assert-MockCalled Get-ItemProperty 
+            Assert-MockCalled Get-ItemProperty
             Assert-MockCalled PSVersion
-            Assert-MockCalled Invoke-Expression 
+            Assert-MockCalled Invoke-Expression
             Assert-MockCalled Show-Alert
         }
     }
@@ -120,9 +123,21 @@ Describe "Get-PwshUpdate" {
             $Result = Get-PwshUpdate -Preview
             $Result | should be "Invoke has started"
         }
+        It "throws when installation gives an error" {
+            Mock Show-Alert { 6 }
+            Mock Invoke-RestMethod  { Throw "Installation failed" }
+            #$Result = Get-PwshUpdate
+            { Get-PwshUpdate -Preview } | should Throw "Installation failed"
+        }
         It "throws when used with Core Previeuw and installing Core Preview" {
             Mock PSVersion { "6.2.0-rc.1" }
             { Get-PwshUpdate -Preview } | should -throw  "The shell is running in PowerShell Core Preview while trying to install Preview. Please run script in PowerShell Core or Windows PowerShell."
+        }
+        It "The Mocks are called" {
+            Assert-MockCalled Get-ItemProperty
+            Assert-MockCalled PSVersion
+            Assert-MockCalled Invoke-Expression
+            Assert-MockCalled Show-Alert
         }
     }
 }
