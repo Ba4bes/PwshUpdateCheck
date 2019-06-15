@@ -1,8 +1,16 @@
 # PWSHUpdateCheck
+[![Build Status](https://dev.azure.com/Ba4bes/Get-PswhUpdate/_apis/build/status/Ba4bes.PwshUpdateCheck?branchName=master)](https://dev.azure.com/Ba4bes/Get-PswhUpdate/_build/latest?definitionId=10&branchName=master)
+
+Gallerylink nog aanpassen!
+[![Gallery version](https://img.shields.io/powershellgallery/v/ARMHelper.svg)](https://img.shields.io/powershellgallery/v/ARMHelper.svg)
+[![Download Status](https://img.shields.io/powershellgallery/dt/ARMHelper.svg)](https://img.shields.io/powershellgallery/dt/ARMHelper.svg)
 
 This Script Checks new PowerShell Core versions and installs them as needed on Windows devices
 
+<bloglink here> describes how to use the script
 <https://4bes.nl/2019/01/04/powershell-challenge-check-pwsh-version-and-install/> describes how the script was created and how to use it in a Scheduled task.
+
+
 
 ## Common setup
 

@@ -53,5 +53,5 @@ stages:
       vmImage: windows-2019
     steps:
     - powershell: |
-        'Publish-Module -Path "$(System.DefaultWorkingDirectory)/_Ba4bes_ARMhelper/ARMHelper" -NuGetApiKey "$(GalleryApiKey)"    '
+        'Publish-Script -Path "$(System.DefaultWorkingDirectory)/Get-PwshUpdate.ps1" -NuGetApiKey "$(GalleryApiKey)"    '
       displayName: 'Deploy to Gallery'
