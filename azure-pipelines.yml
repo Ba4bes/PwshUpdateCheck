@@ -1,5 +1,5 @@
 
-Name: Gallerydeployment
+name: Gallerydeployment
 
 trigger:
   branches:
