@@ -19,9 +19,6 @@ Describe "Get-PwshUpdate" {
         Mock PSVersion {
             "5.1"
         }
-        It "Script does not throw" {
-            { Get-PwshUpdate } | should -not -Throw
-        }
         It "Stops script without action when no new version is available" {
             Mock Get-ItemProperty {
                 [pscustomobject]@{
