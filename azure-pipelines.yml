@@ -1,5 +1,5 @@
 
-name: Gallerydeployment
+Name: Gallerydeployment
 
 trigger:
   branches:
@@ -53,5 +53,5 @@ stages:
       vmImage: windows-2019
     steps:
     - powershell: |
-        'Publish-Script -Path "$(System.DefaultWorkingDirectory)/" -NuGetApiKey "$(GalleryApiKey)"    '
+        'Publish-Script -Path "$(System.DefaultWorkingDirectory)/Get-PwshUpdate.ps1" -NuGetApiKey "$(GalleryApiKey)" '
       displayName: 'Deploy to Gallery'
