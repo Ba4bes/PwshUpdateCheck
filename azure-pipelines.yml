@@ -55,7 +55,7 @@ stages:
     - powershell: |
         try {
           $Parameters = @{
-            Path        = (Resolve-Path -Path $(Build.SourcesDirectory)/testdeployment.ps1).path
+            Path        = (Resolve-Path -Path $(Build.SourcesDirectory)/Get-PwshUpdate.ps1).path
             NuGetApiKey = "$(GalleryApiKey)"
             ErrorAction = 'Stop'
           }
