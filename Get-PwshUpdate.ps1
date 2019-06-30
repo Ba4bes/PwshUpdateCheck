@@ -43,7 +43,7 @@ Checks for new versions for both PowerShell Core and PowerShell Core Preview
 
 .NOTES
 Script used for install: https://aka.ms/install-powershell.ps1
-Script should be ran from a different version then the shell then the one that's being updated
+Script should be run from a different version of the shell than the one that's being updated
 Script only works when a previous version of Powershell has been installed.
 Functions are called beneath the script to use it in a scheduled task.
 Created by Barbara Forbes
@@ -63,7 +63,9 @@ Function Show-Alert {
     $Alert = New-Object -comobject wscript.shell
     $Alert.popup($AlertText, 0, "PowershellCore Update", 32 + 4)
 }
-Function PSVersion {
+
+#This function is used to make mocking the version possible for the Pester tests.
+Function Get-PSVersion {
     $PSVersionTable.PSVersion.ToString()
 }
 
@@ -73,7 +75,7 @@ Function Get-PwshUpdate {
         [Switch]$Preview
     )
     # Check the version, this script can't run from the same Powershell version as it would update.
-    $PSVersionCheck = PSVersion
+    $PSVersionCheck = Get-PSVersion
     If ($PSVersionCheck -like "*-rc*" -or $PSVersionCheck -like "*Preview*") {
         if ($null -eq $Preview) {
             Continue
@@ -91,10 +93,12 @@ Function Get-PwshUpdate {
     $Metadata = Invoke-RestMethod https://raw.githubusercontent.com/PowerShell/PowerShell/master/tools/metadata.json
 
     # Change the tags so they are in the same format as the local version
-    $PwshRelease = $Metadata.ReleaseTag -replace '^v'
     if ($Preview) {
         $PwshRelease = ($Metadata.PreviewReleaseTag -replace '^v') -replace '-preview'
         $PwshName = $PwshName -replace '-x', '-preview'
+    }
+    else {
+        $PwshRelease = $Metadata.ReleaseTag -replace '^v'
     }
 
     # Get the local version
@@ -134,9 +138,10 @@ Function Get-PwshUpdate {
     }
 }
 
-if ($MyInvocation.InvocationName -ne '.'){
-Get-PwshUpdate
-Get-PwshUpdate -Preview
+# The if-statement is so these commands don't run when the Pester test is called
+if ($MyInvocation.InvocationName -ne '.') {
+    Get-PwshUpdate
+    Get-PwshUpdate -Preview
 }
 
 
