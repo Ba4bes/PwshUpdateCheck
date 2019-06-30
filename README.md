@@ -2,6 +2,8 @@
 
 [![Build Status](https://dev.azure.com/Ba4bes/Get-PswhUpdate/_apis/build/status/Ba4bes.PwshUpdateCheck?branchName=master)](https://dev.azure.com/Ba4bes/Get-PswhUpdate/_build/latest?definitionId=10&branchName=master)
 
+[![Gallery version](https://img.shields.io/powershellgallery/v/Get-PwshUpdate.svg)](https://img.shields.io/powershellgallery/v/Get-PwshUpdate.svg)
+[![Download Status](https://img.shields.io/powershellgallery/dt/Get-PwshUpdate.svg)](https://img.shields.io/powershellgallery/dt/Get-PwshUpdate.svg)
 
 This Script Checks new PowerShell Core versions and installs them as needed on Windows devices
 
@@ -9,9 +11,17 @@ This Script Checks new PowerShell Core versions and installs them as needed on W
 
 [4bes.nl - PowerShell Challenge: Check PWSH version and install](https://4bes.nl/2019/01/04/powershell-challenge-check-pwsh-version-and-install/) describes how the script was created
 
+[Find the script in the Gallery]([https://www.powershellgallery.com/packages/Get-PwshUpdate)
+
 ## Common setup
 
 ### Installation
+
+Install the script by using the following line
+
+```cmd
+Install-Script -Name Get-PwshUpdate
+```
 
 Run in a scheduled task or manually.
 Want to Run it in a scheduled task? Execute the following code:
@@ -20,7 +30,8 @@ Want to Run it in a scheduled task? Execute the following code:
 # Run as administrator!
 # Run in Windows PowerShell, this does not work in Core 😭
 
-$ScriptPath = "C:\Scripts\Get-PwshUpdate.ps1"
+$InstalledScriptPath = (Get-InstalledScript -Name Get-PwshUpdate).InstalledLocation
+$ScriptPath = "$InstalledScriptPath/Get-PwshUpdate"
 #Format as Date-Time
 [DateTime]$CheckTime = "10pm"
 
