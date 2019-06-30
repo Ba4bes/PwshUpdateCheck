@@ -1,3 +1,4 @@
+
 <#PSScriptInfo
 
 .VERSION 1.0
@@ -6,13 +7,21 @@
 
 .AUTHOR Barbara Forbes
 
+.DESCRIPTION This Script Checks new PowerShell Core versions and installs them as needed
+
+.COMPANYNAME 4bes.nl
+
 .COPYRIGHT
 
-.TAGS PowerShell Core
+.TAGS Check PWSH Updates
 
-.LICENSEURI
+.LICENSEURI https://raw.githubusercontent.com/Ba4bes/PwshUpdateCheck/master/LICENSE
 
 .PROJECTURI https://github.com/Ba4bes/PWSHUpdateCheck
+
+.ICONURI
+
+.EXTERNALMODULEDEPENDENCIES
 
 .REQUIREDSCRIPTS
 
@@ -23,6 +32,7 @@
 .PRIVATEDATA
 
 #>
+
 <#
 .SYNOPSIS
 This Script Checks new PowerShell Core versions and installs them as needed
@@ -47,14 +57,15 @@ Script should be run from a different version of the shell than the one that's b
 Script only works when a previous version of Powershell has been installed.
 Functions are called beneath the script to use it in a scheduled task.
 Created by Barbara Forbes
+@Ba4bes
+4bes.nl
 
 .LINK
 https://github.com/Ba4bes/PWSHUpdateCheck
 
-.LINK
-https://4bes.nl/2019/01/04/powershell-challenge-check-pwsh-version-and-install/
 
 #>
+
 Function Show-Alert {
     param (
         [Parameter()]
@@ -70,10 +81,12 @@ Function Get-PSVersion {
 }
 
 Function Get-PwshUpdate {
+    [CmdletBinding()]
     param (
         [Parameter()]
         [Switch]$Preview
     )
+
     # Check the version, this script can't run from the same Powershell version as it would update.
     $PSVersionCheck = Get-PSVersion
     If ($PSVersionCheck -like "*-rc*" -or $PSVersionCheck -like "*Preview*") {
