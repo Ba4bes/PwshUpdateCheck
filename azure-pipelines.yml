@@ -53,5 +53,15 @@ stages:
       vmImage: windows-2019
     steps:
     - powershell: |
-        'Publish-Script -Path "$(System.DefaultWorkingDirectory)/Get-PwshUpdate.ps1" -NuGetApiKey "$(GalleryApiKey)" '
+        try {
+          $Parameters = @{
+            Path        = (Resolve-Path -Path $(Build.SourcesDirectory)/testdeployment.ps1).path
+            NuGetApiKey = "$(GalleryApiKey)"
+            ErrorAction = 'Stop'
+          }
+          Publish-Script @Parameters -Force
+        }
+        Catch {
+          Throw $_
+        }
       displayName: 'Deploy to Gallery'
