@@ -31,13 +31,13 @@ Want to Run it in a scheduled task? Execute the following code:
 # Run in Windows PowerShell, this does not work in Core 😭
 
 $InstalledScriptPath = (Get-InstalledScript -Name Get-PwshUpdate).InstalledLocation
-$ScriptPath = "$InstalledScriptPath/Get-PwshUpdate"
+$ScriptPath = "$InstalledScriptPath/Get-PwshUpdate.ps1"
 #Format as Date-Time
 [DateTime]$CheckTime = "10pm"
 
 $Parameters = @{
-"Execute" = "Powershell.exe"
-"Argument" = "-ExecutionPolicy Bypass -NoProfile -WindowStyle Hidden -file `" $ScriptPath`" "
+    "Execute" = "Powershell.exe"
+    "Argument" = "-ExecutionPolicy Bypass -NoProfile -WindowStyle Hidden -file `" $ScriptPath`" "
 }
 $Action = New-ScheduledTaskAction @Parameters
 
