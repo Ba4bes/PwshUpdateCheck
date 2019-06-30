@@ -1,0 +1,57 @@
+
+name: Gallerydeployment
+
+trigger:
+  branches:
+    include:
+    - '*'  # must quote since "*" is a YAML reserved character; we want a string
+
+
+stages:
+
+- stage: Build
+  jobs:
+  - job: Tests
+    pool:
+      vmImage: windows-2019
+    steps:
+    - powershell: |
+       Install-PackageProvider -Name NuGet -Force -Scope CurrentUser
+       Install-Module -Name Pester -Force -Scope CurrentUser -SkipPublisherCheck
+       Install-Module -Name PSScriptAnalyzer -Force -Scope CurrentUser
+      displayName: 'Install Pester and import module'
+    - powershell: |
+        $outputFile = ".\TEST-RESULTS.xml"
+
+        Invoke-Pester -OutputFile $outputFile -OutputFormat NUnitXml -enableExit
+      failOnStderr: false
+      displayName: 'Invoke-Pester'
+    - task: PublishTestResults@2
+      displayName: Publish Test Results
+      inputs:
+        testRunTitle: 'Test Results for Pester'
+        buildPlatform: 'Windows'
+        testRunner: 'NUnit'
+        testResultsFiles: './TEST-RESULTS.xml'
+        failTaskOnFailedTests: true # required to fail build when tests fail
+    - task: PowerShell@2
+      displayName: 'PSScriptanalyzer-tests'
+      inputs:
+        targetType: filePath
+        filePath: Tests/PSScriptAnalyzer.ps1
+        arguments: '-ScriptPath "$(Build.SourcesDirectory)/Get-PwshUpdate.ps1"'
+        failOnStderr: true
+
+- stage: Deploy
+  condition:
+    and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master') )
+  dependsOn:
+    Build
+  jobs:
+  - job: DeploytoGallery
+    pool:
+      vmImage: windows-2019
+    steps:
+    - powershell: |
+        'Publish-Script -Path "$(System.DefaultWorkingDirectory)/Get-PwshUpdate.ps1" -NuGetApiKey "$(GalleryApiKey)" '
+      displayName: 'Deploy to Gallery'
