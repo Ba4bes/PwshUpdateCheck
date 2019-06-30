@@ -16,7 +16,7 @@ Describe "Get-PwshUpdate" {
                 NextReleaseTag      = "v7.0.0-preview.2"
             }
         }
-        Mock PSVersion {
+        Mock Get-PSVersion {
             "5.1"
         }
         It "Stops script without action when no new version is available" {
@@ -63,12 +63,12 @@ Describe "Get-PwshUpdate" {
             { Get-PwshUpdate } | should Throw "Installation failed"
         }
         It "throws when used with Core and installing Core" {
-            Mock PSVersion { "6.2.0" }
+            Mock Get-PSVersion { "6.2.0" }
             { Get-PwshUpdate } | should -throw "The shell is running in PowerShell Core while trying to install Core. Please run script in PowerShell Core Preview or Windows PowerShell."
         }
         It "The Mocks are called" {
             Assert-MockCalled Get-ItemProperty
-            Assert-MockCalled PSVersion
+            Assert-MockCalled get-PSVersion
             Assert-MockCalled Invoke-Expression
             Assert-MockCalled Show-Alert
         }
@@ -83,7 +83,7 @@ Describe "Get-PwshUpdate" {
                 NextReleaseTag      = "v7.0.0-preview.2"
             }
         }
-        Mock PSVersion {
+        Mock Get-PSVersion {
             "5.1"
         }
         It "Stops script without action when no new version is available" {
@@ -127,12 +127,12 @@ Describe "Get-PwshUpdate" {
             { Get-PwshUpdate -Preview } | should Throw "Installation failed"
         }
         It "throws when used with Core Previeuw and installing Core Preview" {
-            Mock PSVersion { "6.2.0-rc.1" }
+            Mock Get-PSVersion { "6.2.0-rc.1" }
             { Get-PwshUpdate -Preview } | should -throw  "The shell is running in PowerShell Core Preview while trying to install Preview. Please run script in PowerShell Core or Windows PowerShell."
         }
         It "The Mocks are called" {
             Assert-MockCalled Get-ItemProperty
-            Assert-MockCalled PSVersion
+            Assert-MockCalled Get-PSVersion
             Assert-MockCalled Invoke-Expression
             Assert-MockCalled Show-Alert
         }
