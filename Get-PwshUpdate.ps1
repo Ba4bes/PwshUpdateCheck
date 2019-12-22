@@ -107,7 +107,7 @@ Function Get-PwshUpdate {
 
     # Change the tags so they are in the same format as the local version
     if ($Preview) {
-        $PwshRelease = ($Metadata.PreviewReleaseTag -replace '^v') -replace '-preview'
+        $PwshRelease = (($Metadata.PreviewReleaseTag -replace '^v') -replace '-rc') -replace '-preview'
         $PwshName = $PwshName -replace '-x', '-preview'
     }
     else {
