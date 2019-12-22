@@ -61,8 +61,14 @@ Please add an issue with your suggestions.
 
 ## Changelog
 
-Version: 1.0
+*Version 1.0.1*
+22/12/2019
+Changed handling of the metadata
+
+*Version: 1.0*
 Last update: june 30th 2019
+Initial Commit
+
 
 ## Known Issues
 
