@@ -1,7 +1,7 @@
 
 <#PSScriptInfo
 
-.VERSION 1.0
+.VERSION 1.0.1
 
 .GUID 89536fca-8990-49c0-86b4-8ebfeaa28095
 
@@ -107,7 +107,7 @@ Function Get-PwshUpdate {
 
     # Change the tags so they are in the same format as the local version
     if ($Preview) {
-        $PwshRelease = ($Metadata.PreviewReleaseTag -replace '^v') -replace '-preview'
+        $PwshRelease = (($Metadata.PreviewReleaseTag -replace '^v') -replace '-rc') -replace '-preview'
         $PwshName = $PwshName -replace '-x', '-preview'
     }
     else {
